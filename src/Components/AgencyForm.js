@@ -1,8 +1,9 @@
-import React, {useState} from 'react'
+import React, {useState} from 'react';
+import axios from 'axios';
 import { FaBuilding, FaMapMarkerAlt, FaMapMarkedAlt, FaEnvelope, FaPhone, FaIdBadge } from 'react-icons/fa';
 
 const AgencyForm = ({ onAddAgent }) => {
-    const [formData, setFormData] = useState({
+      const [formData, setFormData] = useState({
         agencyName: '',
         iataStatus: '',
         locationState: '',
@@ -17,22 +18,30 @@ const AgencyForm = ({ onAddAgent }) => {
         setFormData({ ...formData, [name]: value });
       };
     
-      const handleSubmit = (e) => {
+      const handleSubmit = async (e) => {
         e.preventDefault();
         const updatedFormData = {
           ...formData,
           registrationDate: new Date().toISOString(),
         };
-        onAddAgent(updatedFormData);
-        setFormData({
-          agencyName: '',
-          iataStatus: '',
-          locationState: '',
-          address: '',
-          email: '',
-          telephone: '',
-          iataNo: ''
-        });
+
+        try {
+          const response = await axios.post('http://localhost:5000/api/agents', updatedFormData);
+          console.log('Response', response.data);
+
+          if (onAddAgent) onAddAgent(updatedFormData);
+          setFormData({
+            agencyName: '',
+            iataStatus: '',
+            locationState: '',
+            address: '',
+            email: '',
+            telephone: '',
+            iataNo: ''
+          });
+        } catch (error) {
+          console.error('Error submitting form', error);
+        }
       };
   return (
     <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-6 py-4 space-y-4">
