@@ -37,6 +37,7 @@ const AgencyForm = ({ onAddAgent }) => {
             address: '',
             email: '',
             telephone: '',
+            // iataNo: ''
             iataNo: ''
           });
         } catch (error) {
